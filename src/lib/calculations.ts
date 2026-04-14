@@ -46,11 +46,17 @@ export function rollingAverage(data: { mpg: number | null }[], window: number) {
 }
 
 export function getStats(fillups: Fillup[], vehicle: Vehicle) {
+  const totalCost = fillups.reduce((s, f) => s + Number(f.total_cost), 0);
+  const totalDistance = fillups.length >= 2
+    ? Number(fillups[0].odometer) - Number(fillups[fillups.length - 1].odometer)
+    : 0;
+  const costPerMile = totalDistance > 0 ? Math.round((totalCost / totalDistance) * 100) / 100 : null;
+
   const withEfficiency = calculateEfficiency(fillups, vehicle);
   const validMpg = withEfficiency.filter(f => f.mpg !== null);
   
   if (validMpg.length === 0) {
-    return { current: null, avg3mo: null, best: null, worst: null, totalCost: 0, costPerMile: null };
+    return { current: null, avg3mo: null, best: null, worst: null, totalCost: Math.round(totalCost * 100) / 100, costPerMile };
   }
 
   const current = validMpg[validMpg.length - 1].mpg;
@@ -63,11 +69,6 @@ export function getStats(fillups: Fillup[], vehicle: Vehicle) {
   const mpgValues = validMpg.map(f => f.mpg!);
   const best = Math.max(...mpgValues);
   const worst = Math.min(...mpgValues);
-  const totalCost = fillups.reduce((s, f) => s + f.total_cost, 0);
-  const totalDistance = fillups.length >= 2
-    ? fillups[0].odometer - fillups[fillups.length - 1].odometer
-    : 0;
-  const costPerMile = totalDistance > 0 ? Math.round((totalCost / totalDistance) * 100) / 100 : null;
 
   return { current, avg3mo, best: Math.round(best * 100) / 100, worst: Math.round(worst * 100) / 100, totalCost: Math.round(totalCost * 100) / 100, costPerMile };
 }
