@@ -11,7 +11,7 @@ export function useVehicles() {
       const { data, error } = await supabase
         .from('vehicles')
         .select('*')
-        .eq('nickname', currentUser!)
+        .eq('owner_name', currentUser!)
         .order('created_at', { ascending: true });
       if (error) throw error;
       return data as Vehicle[];
@@ -20,28 +20,14 @@ export function useVehicles() {
   });
 }
 
-export function useAllVehicles() {
-  const { currentUser } = useUser();
-  return useQuery({
-    queryKey: ['vehicles', currentUser],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('vehicles')
-        .select('*')
-        .order('created_at', { ascending: true });
-      if (error) throw error;
-      return data as Vehicle[];
-    },
-  });
-}
-
 export function useAddVehicle() {
   const qc = useQueryClient();
+  const { currentUser } = useUser();
   return useMutation({
     mutationFn: async (vehicle: Omit<Vehicle, 'id' | 'user_id' | 'created_at'>) => {
       const { data, error } = await supabase
         .from('vehicles')
-        .insert({ ...vehicle })
+        .insert({ ...vehicle, owner_name: currentUser })
         .select()
         .single();
       if (error) throw error;

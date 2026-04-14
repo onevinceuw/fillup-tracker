@@ -28,7 +28,7 @@ export default function UserSelectPage() {
   const handleAddUser = async () => {
     if (!newName.trim()) return;
     const name = newName.trim();
-    await supabase.from('profiles').insert({ display_name: name });
+    await supabase.from('profiles').insert({ display_name: name } as any);
     await refetch();
     setCurrentUser(name);
   };
