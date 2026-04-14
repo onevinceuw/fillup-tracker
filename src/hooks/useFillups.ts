@@ -48,7 +48,7 @@ export function useAddFillup() {
 export function useUpdateFillup() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id, ...updates }: Partial<Fillup> & { id: string }) => {
+    mutationFn: async ({ id, mpg, cost_per_mile, ...updates }: Partial<Fillup> & { id: string }) => {
       const { error } = await supabase.from('fillups').update(updates).eq('id', id);
       if (error) throw error;
     },
