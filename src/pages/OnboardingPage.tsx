@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Fuel, Car } from 'lucide-react';
+import { Car } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { FuelType } from '@/types/database';
 
@@ -36,7 +36,7 @@ export default function OnboardingPage() {
           </div>
           <div>
             <CardTitle className="text-2xl font-bold">Add Your First Vehicle</CardTitle>
-            <CardDescription>Let's get you set up with your first vehicle to start tracking</CardDescription>
+            <CardDescription>Let's get you set up to start tracking</CardDescription>
           </div>
         </CardHeader>
         <CardContent>
