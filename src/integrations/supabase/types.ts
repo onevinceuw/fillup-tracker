@@ -103,6 +103,7 @@ export type Database = {
           make: string
           model: string
           nickname: string | null
+          owner_name: string | null
           user_id: string | null
           year: number
         }
@@ -114,6 +115,7 @@ export type Database = {
           make: string
           model: string
           nickname?: string | null
+          owner_name?: string | null
           user_id?: string | null
           year: number
         }
@@ -125,6 +127,7 @@ export type Database = {
           make?: string
           model?: string
           nickname?: string | null
+          owner_name?: string | null
           user_id?: string | null
           year?: number
         }
