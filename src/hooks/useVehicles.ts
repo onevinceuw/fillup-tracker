@@ -1,12 +1,29 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Vehicle } from '@/types/database';
-
-
+import { useUser } from '@/contexts/UserContext';
 
 export function useVehicles() {
+  const { currentUser } = useUser();
   return useQuery({
-    queryKey: ['vehicles'],
+    queryKey: ['vehicles', currentUser],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('vehicles')
+        .select('*')
+        .eq('nickname', currentUser!)
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return data as Vehicle[];
+    },
+    enabled: !!currentUser,
+  });
+}
+
+export function useAllVehicles() {
+  const { currentUser } = useUser();
+  return useQuery({
+    queryKey: ['vehicles', currentUser],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('vehicles')
