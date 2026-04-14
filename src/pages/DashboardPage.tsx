@@ -4,13 +4,15 @@ import { useFillups } from '@/hooks/useFillups';
 import { getStats, getEfficiencyLabel } from '@/lib/calculations';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Fuel, TrendingUp, TrendingDown, Plus, Car, ChevronDown, Gauge } from 'lucide-react';
+import { Fuel, TrendingUp, TrendingDown, Plus, Car, ChevronDown, Gauge, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '@/contexts/UserContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import FillupList from '@/components/FillupList';
 import EfficiencyChart from '@/components/EfficiencyChart';
 
 export default function DashboardPage() {
+  const { currentUser, logout } = useUser();
   const { data: vehicles = [], isLoading: vehiclesLoading } = useVehicles();
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -64,6 +66,9 @@ export default function DashboardPage() {
               ))}
               <DropdownMenuItem onClick={() => navigate('/vehicles')} className="gap-2">
                 <Car className="w-3 h-3" /> Manage Vehicles
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={logout} className="gap-2 text-muted-foreground">
+                <LogOut className="w-3 h-3" /> Switch User
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
