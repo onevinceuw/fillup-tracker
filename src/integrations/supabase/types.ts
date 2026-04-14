@@ -103,7 +103,7 @@ export type Database = {
           make: string
           model: string
           nickname: string | null
-          user_id: string
+          user_id: string | null
           year: number
         }
         Insert: {
@@ -114,7 +114,7 @@ export type Database = {
           make: string
           model: string
           nickname?: string | null
-          user_id: string
+          user_id?: string | null
           year: number
         }
         Update: {
@@ -125,7 +125,7 @@ export type Database = {
           make?: string
           model?: string
           nickname?: string | null
-          user_id?: string
+          user_id?: string | null
           year?: number
         }
         Relationships: []
