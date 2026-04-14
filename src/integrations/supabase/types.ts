@@ -14,7 +14,122 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      fillups: {
+        Row: {
+          charge_level_after: number | null
+          charge_level_before: number | null
+          created_at: string
+          date: string
+          id: string
+          is_partial: boolean
+          notes: string | null
+          odometer: number
+          price_per_unit: number
+          quantity: number
+          station: string | null
+          total_cost: number
+          vehicle_id: string
+        }
+        Insert: {
+          charge_level_after?: number | null
+          charge_level_before?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          is_partial?: boolean
+          notes?: string | null
+          odometer: number
+          price_per_unit: number
+          quantity: number
+          station?: string | null
+          total_cost: number
+          vehicle_id: string
+        }
+        Update: {
+          charge_level_after?: number | null
+          charge_level_before?: number | null
+          created_at?: string
+          date?: string
+          id?: string
+          is_partial?: boolean
+          notes?: string | null
+          odometer?: number
+          price_per_unit?: number
+          quantity?: number
+          station?: string | null
+          total_cost?: number
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fillups_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      vehicles: {
+        Row: {
+          color: string
+          created_at: string
+          fuel_type: string
+          id: string
+          make: string
+          model: string
+          nickname: string | null
+          user_id: string
+          year: number
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          fuel_type?: string
+          id?: string
+          make: string
+          model: string
+          nickname?: string | null
+          user_id: string
+          year: number
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          fuel_type?: string
+          id?: string
+          make?: string
+          model?: string
+          nickname?: string | null
+          user_id?: string
+          year?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
