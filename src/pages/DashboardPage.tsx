@@ -1,19 +1,16 @@
 import React, { useState } from 'react';
 import { useVehicles } from '@/hooks/useVehicles';
 import { useFillups } from '@/hooks/useFillups';
-import { Vehicle } from '@/types/database';
-import { getStats, getEfficiencyLabel, calculateEfficiency, rollingAverage } from '@/lib/calculations';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getStats, getEfficiencyLabel } from '@/lib/calculations';
 import { Button } from '@/components/ui/button';
-import { Fuel, TrendingUp, TrendingDown, DollarSign, Gauge, Plus, Car, ChevronDown } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Fuel, TrendingUp, TrendingDown, Plus, Car, ChevronDown, Gauge } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import FillupList from '@/components/FillupList';
 import EfficiencyChart from '@/components/EfficiencyChart';
 
 export default function DashboardPage() {
-  const { user, signOut } = useAuth();
   const { data: vehicles = [], isLoading: vehiclesLoading } = useVehicles();
   const [selectedVehicleId, setSelectedVehicleId] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -44,41 +41,36 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
         <div className="container flex items-center justify-between h-14 px-4">
           <div className="flex items-center gap-2">
             <Fuel className="w-5 h-5 text-primary" />
             <span className="font-bold text-lg">Fillup</span>
           </div>
-          <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: activeVehicle?.color }} />
-                  <span className="max-w-[120px] truncate">{activeVehicle?.nickname || `${activeVehicle?.year} ${activeVehicle?.make}`}</span>
-                  <ChevronDown className="w-3 h-3" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                {vehicles.map(v => (
-                  <DropdownMenuItem key={v.id} onClick={() => setSelectedVehicleId(v.id)} className="gap-2">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: v.color }} />
-                    {v.nickname || `${v.year} ${v.make} ${v.model}`}
-                  </DropdownMenuItem>
-                ))}
-                <DropdownMenuItem onClick={() => navigate('/vehicles')} className="gap-2">
-                  <Car className="w-3 h-3" /> Manage Vehicles
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-2">
+                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: activeVehicle?.color }} />
+                <span className="max-w-[120px] truncate">{activeVehicle?.nickname || `${activeVehicle?.year} ${activeVehicle?.make}`}</span>
+                <ChevronDown className="w-3 h-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {vehicles.map(v => (
+                <DropdownMenuItem key={v.id} onClick={() => setSelectedVehicleId(v.id)} className="gap-2">
+                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: v.color }} />
+                  {v.nickname || `${v.year} ${v.make} ${v.model}`}
                 </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button variant="ghost" size="sm" onClick={signOut} className="text-muted-foreground">Sign out</Button>
-          </div>
+              ))}
+              <DropdownMenuItem onClick={() => navigate('/vehicles')} className="gap-2">
+                <Car className="w-3 h-3" /> Manage Vehicles
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </header>
 
       <main className="container px-4 py-6 space-y-6 max-w-2xl mx-auto">
-        {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           <Card className="glass-card">
             <CardContent className="p-4">
@@ -106,7 +98,6 @@ export default function DashboardPage() {
           </Card>
         </div>
 
-        {/* Cost Summary */}
         <Card className="glass-card">
           <CardContent className="p-4 flex items-center justify-between">
             <div>
@@ -120,7 +111,6 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
 
-        {/* Chart */}
         {activeVehicle && fillups.length >= 2 && (
           <Card className="glass-card">
             <CardHeader className="pb-2">
@@ -132,12 +122,10 @@ export default function DashboardPage() {
           </Card>
         )}
 
-        {/* Add Fill-up Button */}
         <Button onClick={() => navigate(`/fillup/new?vehicle=${activeVehicle?.id}`)} className="w-full gap-2" size="lg">
           <Plus className="w-4 h-4" /> Log Fill-up
         </Button>
 
-        {/* Recent Fill-ups */}
         {fillups.length > 0 ? (
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-3">Recent Fill-ups</h3>
