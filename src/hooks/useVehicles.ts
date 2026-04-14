@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Vehicle } from '@/types/database';
 
-const ANONYMOUS_USER_ID = '00000000-0000-0000-0000-000000000000';
+
 
 export function useVehicles() {
   return useQuery({
@@ -24,7 +24,7 @@ export function useAddVehicle() {
     mutationFn: async (vehicle: Omit<Vehicle, 'id' | 'user_id' | 'created_at'>) => {
       const { data, error } = await supabase
         .from('vehicles')
-        .insert({ ...vehicle, user_id: ANONYMOUS_USER_ID })
+        .insert({ ...vehicle })
         .select()
         .single();
       if (error) throw error;
