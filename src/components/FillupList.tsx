@@ -1,6 +1,6 @@
 import React from 'react';
 import { Fillup, Vehicle } from '@/types/database';
-import { getQuantityLabel, getEfficiencyLabel } from '@/lib/calculations';
+import { getQuantityLabel, getEfficiencyLabel, calculateEfficiency } from '@/lib/calculations';
 import { useNavigate } from 'react-router-dom';
 import { useDeleteFillup } from '@/hooks/useFillups';
 import { Card, CardContent } from '@/components/ui/card';
@@ -16,10 +16,17 @@ export default function FillupList({ fillups, vehicle }: Props) {
   const navigate = useNavigate();
   const deleteFillup = useDeleteFillup();
   const qtyLabel = getQuantityLabel(vehicle.fuel_type);
+  const effLabel = getEfficiencyLabel(vehicle.fuel_type);
+
+  // Build a map of fillup id -> mpg
+  const withEff = calculateEfficiency(fillups, vehicle);
+  const mpgMap = new Map(withEff.map(f => [f.id, f.mpg]));
 
   return (
     <div className="space-y-2">
-      {fillups.map(f => (
+      {fillups.map(f => {
+        const mpg = mpgMap.get(f.id);
+        return (
         <Card key={f.id} className="glass-card">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
@@ -39,6 +46,12 @@ export default function FillupList({ fillups, vehicle }: Props) {
                   </div>
                 )}
               </div>
+              {mpg != null && (
+                <div className="text-right mr-2">
+                  <span className="text-lg font-bold text-primary">{mpg}</span>
+                  <span className="text-[10px] text-muted-foreground block">{effLabel}</span>
+                </div>
+              )}
               <div className="flex items-center gap-1">
                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => navigate(`/fillup/${f.id}?vehicle=${vehicle.id}`)}>
                   <Edit className="w-3.5 h-3.5" />
@@ -50,7 +63,8 @@ export default function FillupList({ fillups, vehicle }: Props) {
             </div>
           </CardContent>
         </Card>
-      ))}
+        );
+      })}
     </div>
   );
 }

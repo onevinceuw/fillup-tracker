@@ -5,11 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Car } from 'lucide-react';
+import { Car, ChevronUp, ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { FuelType } from '@/types/database';
 
-const VEHICLE_COLORS = ['#14b8a6', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981', '#f97316'];
+const VEHICLE_COLORS = ['#14b8a6', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899', '#10b981', '#f97316', '#000000', '#ffffff'];
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
@@ -44,7 +44,15 @@ export default function OnboardingPage() {
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Year</Label>
-                <Input type="number" value={year} onChange={e => setYear(e.target.value)} required min={1900} max={2030} />
+                <div className="flex items-center h-10 w-full rounded-md border border-input bg-background ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 overflow-hidden">
+                  <button type="button" onClick={() => setYear(String(Math.max(1900, parseInt(year || '0') - 1)))} className="shrink-0 px-2 h-full flex items-center text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
+                    <ChevronDown className="w-4 h-4" />
+                  </button>
+                  <input type="text" inputMode="numeric" className="flex-1 min-w-0 text-center text-sm bg-transparent outline-none text-foreground placeholder:text-muted-foreground" value={year} onChange={e => setYear(e.target.value.replace(/\D/g, '').slice(0, 4))} required />
+                  <button type="button" onClick={() => setYear(String(Math.min(2099, parseInt(year || '0') + 1)))} className="shrink-0 px-2 h-full flex items-center text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors">
+                    <ChevronUp className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>Fuel Type</Label>
